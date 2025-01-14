@@ -2,6 +2,7 @@ import asyncio
 from datasette_enrichments import Enrichment
 from datasette import hookimpl
 from wtforms import Form, FloatField
+import random
 
 
 @hookimpl
@@ -25,6 +26,11 @@ class SlowEnrichment(Enrichment):
                 description="How many seconds to delay for each row",
                 default=0.1,
             )
+            error_rate = FloatField(
+                "Error rate",
+                description="What portion of rows should be errors? Between 0 and 1.0",
+                default=0,
+            )
 
         return ConfigForm
 
@@ -36,5 +42,8 @@ class SlowEnrichment(Enrichment):
         pks,
         config,
     ):
+        error_rate = config.get("error_rate") or 0
         for row in rows:
+            if error_rate and random.random() < error_rate:
+                raise ValueError("Error rate")
             await asyncio.sleep(config["delay"])
