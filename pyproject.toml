@@ -12,7 +12,7 @@ classifiers=[
 requires-python = ">=3.9"
 dependencies = [
     "datasette",
-    "datasette-enrichments>=0.5a1",
+    "datasette-enrichments>=0.5",
 ]
 
 [build-system]
