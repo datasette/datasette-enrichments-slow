@@ -1,6 +1,6 @@
 [project]
 name = "datasette-enrichments-slow"
-version = "0.3a0"
+version = "0.3"
 description = "An enrichment on a slow loop to help debug progress bars"
 readme = "README.md"
 authors = [{name = "Simon Willison"}]
