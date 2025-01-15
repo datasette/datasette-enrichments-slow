@@ -31,6 +31,16 @@ class SlowEnrichment(Enrichment):
                 description="What portion of rows should be errors? Between 0 and 1.0",
                 default=0,
             )
+            pause_rate = FloatField(
+                "Pause rate",
+                description="Chance an item should pause the run, 0 to 1.0",
+                default=0,
+            )
+            cancel_rate = FloatField(
+                "Cancel rate",
+                description="Chance an item should cancel the run, 0 to 1.0",
+                default=0,
+            )
 
         return ConfigForm
 
@@ -43,7 +53,13 @@ class SlowEnrichment(Enrichment):
         config,
     ):
         error_rate = config.get("error_rate") or 0
+        cancel_rate = config.get("cancel_rate") or 0
+        pause_rate = config.get("pause_rate") or 0
         for row in rows:
             if error_rate and random.random() < error_rate:
                 raise ValueError("Error rate")
+            if cancel_rate and random.random() < cancel_rate:
+                raise self.Cancel()
+            if pause_rate and random.random() < pause_rate:
+                raise self.Pause()
             await asyncio.sleep(config["delay"])
